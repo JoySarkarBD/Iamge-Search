@@ -6,6 +6,11 @@
     <title>Image Search App</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-face-detection"
+      type="text/plain"
+      crossorigin="anonymous"></script>
   </head>
 
   <body class="bg-[#334155]">
@@ -116,7 +121,11 @@
     <dialog
       id="deleteImageDialog"
       class="max-w-xl w-full p-5 bg-[#0f172a] rounded">
-      <img id="largeImageToDelete" alt="Large Image" class="rounded mb-5" />
+      <img
+        id="largeImageToDelete"
+        alt="Large Image"
+        class="rounded mb-5"
+        onclick="detectAndShowFacesOnSavedImage(this)" />
       <!-- Delete and Cancel buttons -->
       <button
         class="text-gray-800 bg-indigo-200 hover:bg-indigo-900 inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm"
@@ -130,17 +139,14 @@
       </button>
     </dialog>
 
-    <!-- Face Detection Dialog -->
-    <dialog id="faceDetectionDialog">
-      <img id="savedLargeImage" alt="Saved Large Image" />
-      <button onclick="closeDialog('faceDetectionDialog')">Close</button>
-    </dialog>
-
     <!-- Add your JavaScript code here -->
     <script>
       // Constants for Pixabay API
       const PIXABAY_API_KEY = "41286685-492108aefcd3e1a612fc201ce";
       const PIXABAY_API_URL = `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&image_type=photo&per_page=30&category=people&orientation=horizontal&q=`;
+
+      // MediaPipe Face Detection task
+      const faceDetection = new MediaPipeTask.FaceDetection();
 
       // Function to display the search dialog
       function showSearchDialog() {
@@ -262,6 +268,9 @@
               document.getElementById("resultsContainer");
             resultsContainer.style.display = "none";
           } else {
+            const resultsContainer =
+              document.getElementById("resultsContainer");
+            resultsContainer.style.display = "none";
             // Optionally, display a message if no saved images
             savedImgCount.innerHTML =
               "<p class='text-gray-200 text-sm font-medium mb-5'>No saved images found.</p>";
@@ -353,8 +362,21 @@
         }
       }
 
+      // Function to detect faces using MediaPipe Face Detection API
+      async function detectFacesUsingMediaPipe(imageUrl) {
+        const image = document.createElement("img");
+        image.src = imageUrl;
+        await image.decode();
+
+        const faces = await faceDetection.process(image);
+
+        return faces.map((face) => face.boundingBox);
+      }
+
       // Function to display face detection results
-      function showFaceDetectionResults(imageUrl) {
+      function showFaceDetectionResults(imageUrl, faceBoundingBoxes) {
+        // Customize this function based on how you want to display the results
+        console.log("Detected Faces:", faceBoundingBoxes);
         document.getElementById("savedLargeImage").src = imageUrl;
         document.getElementById("faceDetectionDialog").showModal();
       }
