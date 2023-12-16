@@ -6,11 +6,6 @@
     <title>Image Search App</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-face-detection"
-      type="text/plain"
-      crossorigin="anonymous"></script>
   </head>
 
   <body class="bg-[#334155]">
@@ -144,9 +139,6 @@
       // Constants for Pixabay API
       const PIXABAY_API_KEY = "41286685-492108aefcd3e1a612fc201ce";
       const PIXABAY_API_URL = `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&image_type=photo&per_page=30&category=people&orientation=horizontal&q=`;
-
-      // MediaPipe Face Detection task
-      const faceDetection = new MediaPipeTask.FaceDetection();
 
       // Function to display the search dialog
       function showSearchDialog() {
